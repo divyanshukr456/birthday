@@ -1,0 +1,363 @@
+:root {
+  --night: #2a1030;
+  --rose:   #ff7aa8;
+  --gold:   #ffd27a;
+  --cream:  #fff1f4;
+  --mint:   #8fe3c8;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html { scroll-padding-top: env(safe-area-inset-top, 0px) }
+*, *::before, *::after { box-sizing: inherit }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  font-family: 'Fredoka', system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: radial-gradient(circle at 50% 0%, #5a1f5e, var(--night) 70%);
+  color: var(--cream);
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  padding: 24px 20px 48px;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(2.6rem, 11vw, 4.2rem);
+  margin: .4em 0 .1em;
+  color: var(--gold);
+  line-height: 1;
+}
+
+p.sub { margin: 0 0 1.4rem; opacity: .85 }
+.form   { display: flex; flex-direction: column; gap: 14px; margin-top: 22vh }
+
+/* ── Form controls ─────────────────────────────────────────────────────── */
+input {
+  font: inherit;
+  font-size: 1.2rem;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 2px solid var(--rose);
+  background: rgba(255,255,255,.08);
+  color: var(--cream);
+  text-align: center;
+}
+input:focus-visible,
+button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px }
+input::placeholder   { color: rgba(255,241,244,.55) }
+
+button { border: none; background: none; color: inherit; font: inherit; cursor: pointer }
+
+button.go,
+button.blow,
+button.again {
+  font-weight: 600;
+  font-size: 1.15rem;
+  padding: 14px 24px;
+  border-radius: 14px;
+  min-height: 48px;
+  line-height: 1.3;
+}
+button.go     { border: 0; background: var(--rose); color: var(--night) }
+button.blow   { margin-top: 22px; border: 0; background: var(--gold); color: var(--night) }
+button.again  { border: 1px solid var(--cream); opacity: .8 }
+
+/* Large touch targets on all phones */
+@media (max-width: 479px) {
+  button.go, button.blow, button.again, button.mute, input {
+    padding: 14px 18px;
+    min-height: 52px;
+    font-size: 1.05rem;
+  }
+}
+
+.name   { font-family: 'Caveat', cursive; font-size: clamp(2.4rem,12vw,4rem); color: var(--rose); margin: 0; word-break: break-word; animation: pop .8s both }
+.wish   { min-height: 3.2em; font-size: 1.15rem; margin: .8rem 0 0; animation: pop .6s both }
+.final  { font-family: 'Caveat', cursive; font-size: 1.9rem; color: var(--mint); margin: 20px 0 0; animation: pop .8s both }
+
+/* ── Cake ──────────────────────────────────────────────────────────────── */
+.cake   { position: relative; width: 260px; height: 300px; margin: 34px auto 0 }
+.plate  { position: absolute; bottom: 0; left: -20px; right: -20px; height: 14px; border-radius: 50%; background: var(--cream); opacity: .9 }
+.layer  { position: absolute; left: 50%; height: 44px; border-radius: 10px; transform: translateX(-50%); animation: drop .7s cubic-bezier(.3,1.4,.5,1) both }
+.layer::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 14px; border-radius: 10px 10px 18px 18px; background: var(--cream) }
+.l1     { bottom: 10px; width: 260px; background: #8a4b2f }
+.l2     { bottom: 54px; width: 215px; background: #d76f93 }
+.l3     { bottom: 98px; width: 170px; background: #8a4b2f }
+.l4     { bottom: 142px; width: 125px; background: #d76f93 }
+
+.candle { position: absolute; bottom: 186px; left: 50%; width: 10px; height: 40px; margin-left: -5px; border-radius: 3px; background: repeating-linear-gradient(135deg, var(--mint) 0 6px, var(--cream) 6px 12px); animation: drop .6s ease-out both }
+.flame  { position: absolute; bottom: 224px; left: 50%; width: 14px; height: 24px; margin-left: -7px; border-radius: 50% 50% 50% 50%/65% 65% 35% 35%; background: radial-gradient(circle at 50% 70%, #fff6c8, var(--gold) 60%, #ff9a3c); box-shadow: 0 0 22px 8px rgba(255,200,90,.55); transform-origin: 50% 100%; animation: flick .25s infinite alternate, pop .5s both }
+.smoke  { position: absolute; bottom: 224px; left: 50%; width: 10px; height: 30px; margin-left: -5px; border-radius: 50%; background: rgba(255,255,255,.4); filter: blur(5px); animation: smoke 2.5s ease-out forwards }
+
+.mute   { position: fixed; top: calc(12px + env(safe-area-inset-top,0px)); right: 14px; font: inherit; border: 1px solid var(--rose); background: rgba(0,0,0,.3); color: var(--cream); border-radius: 20px; padding: 6px 14px; cursor: pointer }
+.again  { margin-top: 28px; font: inherit; background: none; border: 1px solid var(--cream); color: var(--cream); border-radius: 12px; padding: 8px 18px; cursor: pointer; opacity: .8 }
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
+@keyframes drop    { from { opacity:0; transform:translate(-50%,-160px) } to   { opacity:1; transform:translate(-50%,0)         } }
+@keyframes rise    { to   { transform:translateY(-125vh) rotate(8deg)       } }
+@keyframes fall    { to   { transform:translateY(112vh) rotate(720deg)      } }
+@keyframes smoke   { from { opacity:.8; transform:translateY(0) scale(1)   } to   { opacity:0; transform:translateY(-70px) scale(2.5) } }
+@keyframes pop     { from { opacity:0; transform:scale(.7)                 } to   { opacity:1; transform:scale(1)               } }
+@keyframes flick   { from { transform:scale(1,1) rotate(-3deg)             } to   { transform:scale(.92,1.1) rotate(3deg)  } }
+@keyframes twinkle { from { opacity:.25                                     } to   { opacity:.8                                      } }
+@keyframes land    { from { opacity:0; transform:translateY(-80px) rotate(calc(var(--r)*3)) scale(.8) } to { opacity:1; transform:rotate(var(--r)) } }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01s !important } }
+
+/* ── Starfield background ──────────────────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .6;
+  animation: twinkle 3s ease-in-out infinite alternate;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8%  12%, #fff,       transparent),
+    radial-gradient(1.5px 1.5px at 27% 30%, #ffd27a,   transparent),
+    radial-gradient(2px   2px   at 46%  8%, #fff,       transparent),
+    radial-gradient(1.5px 1.5px at 66% 22%, #fff,       transparent),
+    radial-gradient(2px   2px   at 85% 10%, #ffd27a,   transparent),
+    radial-gradient(1.5px 1.5px at 92% 38%, #fff,       transparent),
+    radial-gradient(1.5px 1.5px at 14% 55%, #fff,       transparent),
+    radial-gradient(2px   2px   at 78% 62%, #fff,       transparent),
+    radial-gradient(1.5px 1.5px at 35% 80%, #ffd27a,   transparent),
+    radial-gradient(2px   2px   at 60% 90%, #fff,       transparent);
+}
+
+/* ── Balloons & confetti ───────────────────────────────────────────────── */
+.balloon { position: fixed; bottom: -140px; width: 52px; height: 66px; border-radius: 50% 50% 48% 48%; opacity: .8; animation: rise linear infinite; z-index: 0; pointer-events: none }
+.balloon::after { content: ""; position: absolute; top: 100%; left: 50%; width: 1px; height: 46px; background: rgba(255,241,244,.5) }
+.conf    { position: fixed; top: -20px; width: 9px; height: 14px; z-index: 2; pointer-events: none; animation: fall linear forwards }
+
+/* ── Memories / polaroids ──────────────────────────────────────────────── */
+.memories { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-top: 40px }
+.polaroid { margin: 0; width: min(44%, 230px); min-width: 150px; background: var(--cream); padding: 10px 10px 12px; border-radius: 6px; box-shadow: 0 12px 26px rgba(0,0,0,.45); color: var(--night); transform: rotate(var(--r)); animation: land .9s cubic-bezier(.3,1.3,.5,1) both }
+.polaroid img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; object-position: center 25%; border-radius: 3px }
+.polaroid figcaption { font-family: 'Caveat', cursive; font-size: 1.45rem; line-height: 1.1; margin-top: 8px }
+.made     { font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--gold); margin: 26px 0 0 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS — mobile-first design for every device
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── Small phones (iPhone SE / old Android, ≤ 374 px) ─────────────────── */
+@media (max-width: 374px) {
+  body        { background-attachment: fixed }
+  #root       { padding: 16px 12px 36px }
+  h1          { font-size: 2rem }
+  p.sub       { font-size: .95rem }
+  input       { font-size: 1rem; padding: 12px 14px; border-radius: 12px }
+  .cake       { width: 190px; height: 228px; margin-top: 24px }
+  .plate      { left: -16px; right: -16px; height: 12px }
+  .l1         { bottom: 8px; width: 190px }
+  .l2         { bottom: 44px; width: 158px }
+  .l3         { bottom: 88px; width: 124px }
+  .l4         { bottom: 132px; width: 91px }
+  .candle     { bottom: 158px; height: 32px }
+  .flame      { bottom: 190px; height: 20px; width: 12px; margin-left: -6px }
+  .smoke      { bottom: 190px; height: 24px }
+  .name       { font-size: 1.8rem }
+  .wish       { font-size: 1rem; min-height: 2.8em }
+  .final      { font-size: 1.5rem }
+  .memories   { gap: 12px; margin-top: 28px }
+  .polaroid   { width: min(46%, 175px); min-width: 120px }
+  .polaroid figcaption { font-size: 1.2rem }
+  .made       { font-size: 1.2rem; margin: 20px 0 0 }
+  .balloon    { width: 36px; height: 46px }
+  .balloon::after { height: 32px }
+  .conf       { width: 7px; height: 11px }
+  .form       { margin-top: 16vh }
+}
+
+/* ── Standard phones (iPhone 12 / 13, 375 – 419 px) ──────────────────── */
+@media (min-width: 375px) and (max-width: 419px) {
+  #root       { padding: 20px 16px 40px }
+  .cake       { width: 210px; height: 246px; margin-top: 28px }
+  .plate      { left: -18px; right: -18px; height: 12px }
+  .l1         { bottom: 8px; width: 210px }
+  .l2         { bottom: 48px; width: 174px }
+  .l3         { bottom: 96px; width: 136px }
+  .l4         { bottom: 144px; width: 100px }
+  .candle     { bottom: 170px; height: 36px }
+  .flame      { bottom: 206px; height: 22px; width: 13px; margin-left: -6.5px }
+  .smoke      { bottom: 206px; height: 27px }
+  .name       { font-size: 2rem }
+  .wish       { font-size: 1.05rem }
+  .final      { font-size: 1.6rem }
+  .memories   { gap: 14px; margin-top: 32px }
+  .polaroid   { width: min(46%, 195px); min-width: 130px }
+  .polaroid figcaption { font-size: 1.3rem }
+  .balloon    { width: 42px; height: 54px }
+  .balloon::after { height: 38px }
+  .conf       { width: 8px; height: 12px }
+}
+
+/* ── Large phones (iPhone 14 Pro Max / Samsung S23 Ultra, 420 – 479 px) ─ */
+@media (min-width: 420px) and (max-width: 479px) {
+  #root       { padding: 22px 18px 44px }
+  h1          { font-size: clamp(2.4rem, 10vw, 3.6rem) }
+  .cake       { width: 236px; height: 276px; margin-top: 30px }
+  .plate      { left: -18px; right: -18px; height: 13px }
+  .l1         { bottom: 9px; width: 236px }
+  .l2         { bottom: 52px; width: 196px }
+  .l3         { bottom: 95px; width: 154px }
+  .l4         { bottom: 138px; width: 114px }
+  .candle     { bottom: 168px; height: 38px }
+  .flame      { bottom: 206px; height: 23px; width: 13px; margin-left: -6.5px }
+  .smoke      { bottom: 206px; height: 28px }
+  .name       { font-size: 2.2rem }
+  .wish       { font-size: 1.1rem }
+  .final      { font-size: 1.7rem }
+  .memories   { gap: 16px; margin-top: 36px }
+  .polaroid   { width: min(47%, 210px); min-width: 140px }
+  .balloon    { width: 46px; height: 59px }
+  .balloon::after { height: 42px }
+}
+
+/* ── Pocket phablets / foldables (iPad mini portrait, 480 – 734 px) ───── */
+@media (min-width: 480px) and (max-width: 734px) {
+  #root       { max-width: 460px; padding: 24px 18px 48px }
+  h1          { font-size: clamp(2.6rem, 8vw, 3.8rem) }
+  p.sub       { font-size: 1rem }
+  input       { font-size: 1.1rem; padding: 13px 16px }
+  button.go, button.blow { font-size: 1.1rem; padding: 13px 22px }
+  .cake       { width: 260px; height: 304px; margin-top: 34px }
+  .plate      { left: -20px; right: -20px; height: 14px }
+  .l1         { bottom: 10px; width: 260px }
+  .l2         { bottom: 56px; width: 216px }
+  .l3         { bottom: 102px; width: 170px }
+  .l4         { bottom: 148px; width: 126px }
+  .candle     { bottom: 194px; height: 40px }
+  .flame      { bottom: 234px; height: 24px; width: 14px; margin-left: -7px }
+  .smoke      { bottom: 234px; height: 30px }
+  .name       { font-size: 2.4rem }
+  .wish       { font-size: 1.15rem }
+  .final      { font-size: 1.8rem }
+  .memories   { gap: 18px; margin-top: 38px }
+  .polaroid   { width: min(45%, 220px); min-width: 148px }
+  .polaroid figcaption { font-size: 1.4rem }
+  .made       { font-size: 1.4rem }
+  .balloon    { width: 50px; height: 64px }
+  .balloon::after { height: 44px }
+  .conf       { width: 9px; height: 14px }
+}
+
+/* ── Tablets portrait (iPad / Pixel Tablet, 735 – 1023 px) ────────────── */
+@media (min-width: 735px) and (max-width: 1023px) {
+  #root       { max-width: 520px; padding: 30px 28px 56px }
+  h1          { font-size: clamp(2.8rem, 6vw, 4rem) }
+  p.sub       { font-size: 1.05rem }
+  .cake       { width: 290px; height: 340px; margin-top: 40px }
+  .plate      { left: -22px; right: -22px; height: 15px }
+  .l1         { bottom: 12px; width: 290px }
+  .l2         { bottom: 64px; width: 240px }
+  .l3         { bottom: 116px; width: 190px }
+  .l4         { bottom: 168px; width: 140px }
+  .candle     { bottom: 214px; height: 44px }
+  .flame      { bottom: 258px; height: 26px; width: 15px; margin-left: -7.5px }
+  .smoke      { bottom: 258px; height: 34px }
+  .name       { font-size: 2.8rem }
+  .wish       { font-size: 1.2rem }
+  .final      { font-size: 2rem }
+  .memories   { gap: 24px; margin-top: 46px }
+  .polaroid   { width: min(44%, 240px); min-width: 160px }
+  .polaroid figcaption { font-size: 1.5rem }
+  .made       { font-size: 1.6rem }
+  .balloon    { width: 56px; height: 72px }
+  .balloon::after { height: 50px }
+  .conf       { width: 10px; height: 16px }
+}
+
+/* ── iPad 9″ (768 × 1024) — wider card for square viewport ───────────── */
+@media (min-width: 768px) and (max-width: 834px) {
+  #root       { max-width: 700px; padding: 28px 36px 52px }
+  .memories   { gap: 24px; margin-top: 42px }
+  .polaroid   { width: min(46%, 250px) }
+}
+
+/* ── Desktop (1024 px+) ───────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  #root       { max-width: 560px; padding: 32px 28px 64px }
+  h1          { font-size: clamp(2.8rem, 7vw, 4.2rem) }
+  .cake       { width: 310px; height: 362px; margin-top: 44px }
+  .plate      { left: -24px; right: -24px; height: 16px }
+  .l1         { bottom: 12px; width: 310px }
+  .l2         { bottom: 70px; width: 256px }
+  .l3         { bottom: 128px; width: 202px }
+  .l4         { bottom: 186px; width: 148px }
+  .candle     { bottom: 238px; height: 46px }
+  .flame      { bottom: 284px; height: 28px; width: 16px; margin-left: -8px }
+  .smoke      { bottom: 284px; height: 36px }
+  .name       { font-size: 3rem }
+  .wish       { font-size: 1.25rem }
+  .final      { font-size: 2.1rem }
+  .memories   { gap: 28px; margin-top: 52px }
+  .polaroid   { width: min(44%, 260px); min-width: 170px }
+  .polaroid figcaption { font-size: 1.55rem }
+  .made       { font-size: 1.6rem }
+  .balloon    { width: 60px; height: 78px }
+  .balloon::after { height: 54px }
+  .conf       { width: 11px; height: 17px }
+}
+
+/* ── Landscape phones & phablets (compact vertical space) ─────────────── */
+@media (max-height: 500px) {
+  .form       { margin-top: 5vh }
+  .cake       { margin-top: 16px !important }
+  .memories   { margin-top: 20px }
+  body        { overflow-y: auto }
+}
+
+/* ── Very tall narrow screens (folded phones in portrait) ─────────────── */
+@media (min-aspect-ratio: 10/19) {
+  .form       { margin-top: 10vh }
+  .memories   { margin-top: 24px }
+}
+
+/* ── Landscape tablets (iPad Air / Galaxy Tab S8+ in landscape) ───────── */
+@media (min-width: 735px) and (max-height: 600px) {
+  #root       { max-width: 780px }
+  h1          { font-size: clamp(2.4rem, 5vw, 3.4rem) }
+  .memories   { gap: 28px; margin-top: 24px }
+  .polaroid   { width: min(38%, 260px) }
+}
+
+/* ── Foldables opened wide (Galaxy Z Fold, Pixel Fold) ────────────────── */
+@media (min-width: 800px) and (orientation: landscape) {
+  #root       { max-width: 720px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; padding: 28px 32px }
+  h1, p.sub, input, button.mute { justify-self: start }
+  .memories   { grid-column: 1 / -1; justify-content: flex-start }
+  .polaroid   { width: min(32%, 240px) }
+  .cake       { grid-column: 1 / -1; justify-self: center; margin: 0 auto }
+}
+
+/* ── Dynamic Island / rounded notches keep content clear ──────────────── */
+@supports (padding: min(0px)) {
+  :root { --safer-top: env(safe-area-inset-top, 0px); --safer-bottom: env(safe-area-inset-bottom, 0px) }
+  .mute   { top: calc(10px + var(--safer-top)); right: calc(10px + env(safe-area-inset-right, 0px)) }
+  @media (max-width: 479px) { body { padding-bottom: var(--safer-bottom) } }
+}
+
+/* ── High-DPI / Retina displays — crisper stars & flame ───────────────── */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body::before { filter: brightness(1.15) }
+  .flame       { box-shadow: 0 0 28px 10px rgba(255,200,90,.7) }
+}
